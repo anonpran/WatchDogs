@@ -1,0 +1,52 @@
+def sort_and_split(dictionary):
+    # Sort the dictionary in reverse order based on float values
+    sorted_dict = dict(sorted(dictionary.items(), key=lambda item: item[1], reverse=True))
+
+    # Initialize the binary-coded dictionary
+    binary_coded_dict = {}
+
+    # Recursive function to split the dictionary into halves
+    def split_and_code(d, code):
+        nonlocal binary_coded_dict
+        if len(d) == 1:
+            # If the dictionary has only one item, assign the code to the symbol
+            binary_coded_dict[list(d.keys())[0]] = code
+        else:
+            # Split the dictionary into two halves
+            mid = len(d) // 2
+            upper_half = dict(list(d.items())[:mid])
+            lower_half = dict(list(d.items())[mid:])
+
+            # Recursively apply the function to each half
+            split_and_code(upper_half, code + '0')
+            split_and_code(lower_half, code + '1')
+
+    # Call the split_and_code function to generate binary codes
+    split_and_code(sorted_dict, '')
+
+    return binary_coded_dict
+
+
+def cal_e(binary_coded_dict, input_dict):
+    # Calculate the summation based on the provided formula
+    summation = sum(input_dict[key] * len(binary_coded_dict[key]) for key in input_dict)
+
+    return summation
+
+
+# Example usage:
+input_dictionary = {
+    'A': 0.3,
+    'B': 0.5,
+    'C': 0.2,
+    'D': 0.4,
+}
+
+binary_coded_dictionary = sort_and_split(input_dictionary)
+
+print("Binary Codes:")
+for key, code in binary_coded_dictionary.items():
+    print(f"{key}: {code}")
+
+e_result = cal_e(binary_coded_dictionary, input_dictionary)
+print("\nCalculated e Result:", e_result)
